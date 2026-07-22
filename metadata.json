@@ -1,0 +1,6 @@
+{
+  "name": "School Timetable",
+  "description": "An enterprise-grade school timetable management and AI-assisted optimization application.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
