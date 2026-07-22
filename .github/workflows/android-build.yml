@@ -5,7 +5,7 @@ on:
     branches: [ "main", "master" ]
   pull_request:
     branches: [ "main", "master" ]
-  workflow_dispatch: 
+  workflow_dispatch: # Allows you to manually trigger the build from GitHub UI
 
 jobs:
   build:
@@ -22,22 +22,18 @@ jobs:
         distribution: 'temurin'
         cache: 'gradle'
 
+    - name: Decode debug.keystore from Base64
+      run: |
+        if [ -f debug.keystore.base64 ]; then
+          base64 -d debug.keystore.base64 > debug.keystore
+        fi
+
     - name: Ensure Gradle Wrapper exists & Grant execute permission
       run: |
         if [ ! -f gradlew ]; then
           gradle wrapper
         fi
         chmod +x gradlew
-
-    # --- यहाँ बिना किसी Secrets के Dummy फ़ाइलें और Keystore ऑटोमैटिक जनरेट होंगे ---
-    - name: Generate Dummy Google Services and Debug Keystore
-      run: |
-
-        # 1. आपके असली पैकेज नाम (com.aistudio.timetablemanager.xyzhwr) के साथ नकली google-services.json बनाना
-        echo '{"project_info":{"project_number":"12345","project_id":"dummy-id"},"client":[{"client_info":{"mobilesdk_app_id":"1:123:android:123","android_client_info":{"package_name":"com.aistudio.timetablemanager.xyzhwr"}},"api_key":[{"current_key":"dummy_key"}]}]}' > app/google-services.json
-        
-        # 2. डिफ़ॉल्ट debug.keystore जनरेट करना
-        keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
 
     - name: Build Debug APK
       run: ./gradlew assembleDebug
