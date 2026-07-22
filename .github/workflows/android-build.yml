@@ -32,10 +32,11 @@ jobs:
     # --- यहाँ बिना किसी Secrets के Dummy फ़ाइलें और Keystore ऑटोमैटिक जनरेट होंगे ---
     - name: Generate Dummy Google Services and Debug Keystore
       run: |
-        # 1. एक नकली google-services.json फाइल बनाना ताकि बिल्ड न रुके
-        echo '{"project_info":{"project_number":"12345","project_id":"dummy-id"},"client":[{"client_info":{"mobilesdk_app_id":"1:123:android:123","android_client_info":{"package_name":"com.example.school"}},"api_key":[{"current_key":"dummy_key"}]}]}' > app/google-services.json
+
+        # 1. आपके असली पैकेज नाम (com.aistudio.timetablemanager.xyzhwr) के साथ नकली google-services.json बनाना
+        echo '{"project_info":{"project_number":"12345","project_id":"dummy-id"},"client":[{"client_info":{"mobilesdk_app_id":"1:123:android:123","android_client_info":{"package_name":"com.aistudio.timetablemanager.xyzhwr"}},"api_key":[{"current_key":"dummy_key"}]}]}' > app/google-services.json
         
-        # 2. एक डिफ़ॉल्ट debug.keystore खुद जनरेट करना ताकि validateSigningDebug पास हो जाए
+        # 2. डिफ़ॉल्ट debug.keystore जनरेट करना
         keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
 
     - name: Build Debug APK
